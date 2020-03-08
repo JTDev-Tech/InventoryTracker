@@ -1,0 +1,95 @@
+{% extends "app/layout.html" %}
+{% load static %}
+{% block content %}
+<table id="part_table" class="display">
+    <thead>
+        <tr>
+			<th></th>
+            <th>Value</th>
+            <th>Package</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+		{% for part in parts %}
+		<tr>
+			<td></td>
+			<td>{{ part.Value }}{{ part.Unit.Postfix }}</td>
+			<td>{{ part.Package.Name }}</td>
+			<td>{{ part.Category.CategoryName }}</td>
+		</tr>
+		{% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" href="{% static 'app/scripts/app_const.js' %}"></script>
+<script type="text/javascript">
+
+	/* Formatting function for row details - modify as you need */
+	function format(d) {
+		// `d` is the original data object for the row
+		return '<table class="part-sub-table">' +
+			"<thead>" +
+			"<tr>" +
+			"<th>Shelf</th>" +
+			"<th>Container ID</th>" +
+			"<th>Quantity</th>" +
+			"</tr>" +
+			"</thead>" +
+			"<tbody></tbody>" +
+			'</table>';
+	}
+
+
+	$(document).ready(function () {
+		var table = $('#part_table').DataTable({
+			/*"ajax": { url: '/api/latest/parts_all', dataSrc: '' },
+			"columns": [
+				{
+					"className": 'details-control',
+					"orderable": false,
+					"data": null,
+					"defaultContent": ''
+				},
+				{ data: 'Name' },
+				{ data: 'Package.Name' },
+				{ data: 'Catagory.CatagoryName' },
+			]*/
+		});
+
+		/*
+		// Add event listener for opening and closing details
+		$('#part_table tbody').on('click', 'td.details-control', function () {
+			var tr = $(this).closest('tr');
+			var row = table.row(tr);
+
+			if (row.child.isShown()) {
+				// This row is already open - close it
+				row.child.hide();
+				tr.removeClass('shown');
+			}
+			else {
+				// Open this row
+				row.child(format(row.data())).show();
+				$(".part-sub-table", row.child()).DataTable({
+					data: row.data().partcountmodel_set,
+					paging: false,
+					searching: false,
+					info : false,
+					columns: [
+						{ data: "Shelf.Name" },
+						{ data: "Location" },
+						{ data: "Quantity" },
+					]
+				});
+				tr.addClass('shown');
+			}
+		});
+		*/
+	});
+
+</script>
+{% endblock %}

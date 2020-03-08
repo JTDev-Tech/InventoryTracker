@@ -1,0 +1,65 @@
+{% extends "app/layout.html" %}
+
+{% block notifications %}
+
+{% if ErrorText %}
+<div class="alert alert-danger">
+	{{ ErrorText }}
+</div>
+{% elif SuccessText %}
+<div class="alert alert-success">
+	{{ SuccessText }}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+<h2>Add new part</h2>
+
+<div class="form-group">
+    {{ PartForm.Part.label_tag }}
+    {{ PartForm.Part }}
+</div>
+
+<form action="{{ url }}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in Form %}
+    <div class="form-group">        
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        {% endif %}
+        {{ field.errors }}
+    </div>
+{% endfor %}
+   <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+        var BaseURL = "/add_part/";
+		$("#id_Part").change(function (data) {
+            console.log(data);
+
+            switch (data.target.value) {
+                case "r":
+                    window.location = BaseURL + 'r';
+                    break;
+                case "c":
+                    window.location = BaseURL + 'c';
+                    break;
+                default:
+                    console.log("Unknown part code");
+                    break;
+            }
+		});
+	});
+</script>
+{% endblock %}
