@@ -3,9 +3,9 @@ from django.http import HttpRequest, HttpResponse
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.functions import Length
-import json
+from django.urls import resolve
 
-from app.forms import ResistorForm, PartAddSelectForm
+from app.forms import ResistorForm, PartAddSelectForm, AddPartBase, CapacitorForm
 from app.models import PartModel, PartCountModel, ContainerModel
 from app.models import PackageModel, PartCategoryModel, PartAttrModel
 from app.models import MeasurementUnitModel
@@ -51,7 +51,17 @@ def _GetResValue(value:str, cat:PartCategoryModel):
         u = Units.annotate(length=Length('Postfix')).get(length=1)
         return (value, u)
 
-def add_part(request, part_name:str=None):
+def _GetParts(form:AddPartBase, cat:str):
+    """
+    Extract the container and Package for a part to add
+    """
+    Cont = form.cleaned_data["Container_ID"]
+    Pack = form.cleaned_data['Package_ID']
+    Cat = _GetCategory(cat)
+
+    return (Cont, Pack, Cat)
+
+def add_part(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
 
@@ -61,6 +71,57 @@ def add_part(request, part_name:str=None):
             'url':'/add_part',
             'Form':None,
             'PartForm':PartAddSelectForm(),
+            'title':'Add Part',
+        })
+
+def add_part_capacitor(request:HttpRequest):
+    """
+    Add a capacitor
+    """
+    ErrorText:str = None
+    SuccessText:str = None
+    Form = CapacitorForm
+
+    if request.method == 'POST':
+        Form = CapacitorForm(request.POST, request.FILES)
+        if Form.is_valid():
+            try:
+                with transaction.atomic():
+                    Cont, Pack, Cat = _GetParts(Form, "Capacitor")
+                    Value, Unit = _GetResValue(Form.cleaned_data['Value'], Cat)
+                    Vol = _GetAttr("Voltage", Form.cleaned_data["Voltage"])
+
+                    print(Value)
+
+                    PM = PartModel(Name=Form.cleaned_data['Value'],
+                                   Value = Value,
+                                   Unit = Unit,
+                                   Package = Pack,
+                                   Category = Cat)
+
+                    if 'Datasheet' in Form.cleaned_data:
+                        PM.DataSheet = Form.cleaned_data['Datasheet']
+
+                    PM.save()
+                    PM.Attributes.add(Vol)
+                    PM.save()
+
+                    PC = PartCountModel(Quantity=Form.cleaned_data['PartQuantity'],
+                                        Location=Cont,
+                                        Part=PM)
+
+                    PC.save()
+            except:
+                raise
+
+    return render(request,
+        'app/add_part.html',
+        {
+            "ErrorText":ErrorText,
+            "SuccessText":SuccessText,
+            'url':request.path_info,
+            'Form':Form,
+            'PartForm':PartAddSelectForm({'Part':'c'}),
             'title':'Add Part',
         })
 
@@ -77,9 +138,7 @@ def add_part_resistor(request):
         if Form.is_valid():
             try:
                 with transaction.atomic():
-                    Cont = pk = Form.cleaned_data["Container_ID"]
-                    Pack = pk = Form.cleaned_data['Package_ID']
-                    Cat = _GetCategory('Resistor')
+                    Cont, Pack, Cat = _GetParts(Form, "Resistor")
                     Tol = _GetAttr("tolerance", Form.cleaned_data["ResistorToler"])
                     Value, Unit = _GetResValue(Form.cleaned_data['Value'], Cat)
 
@@ -122,37 +181,3 @@ def add_part_resistor(request):
             'PartForm':PartAddSelectForm({'Part':'r'}),
             'title':'Add Part',
         })
-
-@transaction.atomic
-def api_add_resistor(request):
-    assert isinstance(request, HttpRequest)
-    if request.is_ajax():
-        form = ResistorForm(request.POST)
-        if form.is_valid():
-            Cont = ContainerModel.objects.get(pk=form.cleaned_data["Container_ID"])
-            Pack = PackageModel.objects.get(pk=form.cleaned_data['Package_ID'])
-            Cat = _GetCategory('Resistor')
-            Tol = _GetAttr("tolerance", form.cleaned_data["ResistorToler"])
-
-            PM = PartModel(Name=form.cleaned_data['Value'],
-                           Package = Pack,
-                           Catagory = Cat)
-
-            PM.save()
-            PM.Attributes.add(Tol)
-            PM.save()
-
-            PC = PartCountModel(Quantity=form.cleaned_data['PartQuantity'],
-                                Location=Cont,
-                                Part=PM)
-
-            PC.save()
-
-            return HttpResponse()
-        else:
-            return HttpResponse(form.errors.as_json(),status=400)
-    else:
-        if not request.is_ajax(): return HttpResponse("not ajax request", status=400)
-        if request.method != "POST": return HttpResponse("Not a post request", status=400)
-
-    return HttpResponse("Bad request. Unknown error", status=400)

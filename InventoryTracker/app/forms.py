@@ -39,16 +39,27 @@ class PartAddSelectForm(forms.Form):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
-class ResistorForm(FormBase):
+class AddPartBase(FormBase):
+    """
+    Base class for adding a part
+    """
+
+    PartQuantity = forms.IntegerField(label='Quantity',
+                                      help_text="Quantity of parts");
+
+    Datasheet = forms.FileField(allow_empty_file=False, required=False)
+
+    Package_ID = forms.ModelChoiceField(label='Package', queryset=PackageModel.objects.all())
+
+    Container_ID = forms.ModelChoiceField(label='Container', queryset=ContainerModel.objects.all());
+
+class ResistorForm(AddPartBase):
     """
     Form for adding a resistor
     """
 
     Value = forms.CharField(label='Value', max_length=30,
                             help_text='Resistor value')
-
-    PartQuantity = forms.IntegerField(label='Quantity',
-                                      help_text="Quantity of parts");
 
     ResistorToler = forms.ChoiceField(label='Tolerance', choices=(
         (0.05, "0.05%"),
@@ -61,10 +72,15 @@ class ResistorForm(FormBase):
         (10.0, "10%"),
         ))
 
-    Datasheet = forms.FileField(allow_empty_file=False, required=False)
+    field_order = ['Value', 'PartQuantity',]
 
-    Package_ID = forms.ModelChoiceField(label='Package', queryset=PackageModel.objects.all())
+class CapacitorForm(AddPartBase):
+    """
+    Form to add a capacitor
+    """
+    Value = forms.CharField(label='Value', max_length=30,
+                            help_text='Cap value')
 
-    Container_ID = forms.ModelChoiceField(label='Container', queryset=ContainerModel.objects.all());
+    Voltage = forms.FloatField(help_text="Voltage rating of the capacitor")
 
-    
+    field_order = ['Value', 'Voltage', 'PartQuantity',]
