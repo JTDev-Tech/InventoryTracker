@@ -4,11 +4,46 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.models.functions import Length
 from django.urls import resolve
+from django.views.generic.base import TemplateView
+import django.db.utils
 
 from app.forms import ResistorForm, PartAddSelectForm, AddPartBase, CapacitorForm
 from app.models import PartModel, PartCountModel, ContainerModel
 from app.models import PackageModel, PartCategoryModel, PartAttrModel
-from app.models import MeasurementUnitModel
+
+from app.support.units import UnitManager
+
+class AddPartBaseView(TemplateView):
+    """
+    Base view class for adding a part
+    """
+    template_name = "app/add_part.html"
+
+    def __init__(self, **kwargs):
+        self._Form = None
+        self.ErrorText = None
+        self.SuccessText = None
+        return super().__init__(**kwargs)
+
+    def GetPartTypeForm(self):
+        return PartAddSelectForm()
+
+    def GetURL(self):
+        return '/add_part'
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['url'] = self.GetURL()
+        context['Form'] = self._Form
+        context['title'] = "Add Part"
+        context['PartForm'] = self.GetPartTypeForm()
+        context['ErrorText'] = self.ErrorText
+        context['SuccessText'] = self.SuccessText
+        return context
 
 def _GetCategory(name:str) -> PartCategoryModel:
     """
@@ -34,23 +69,6 @@ def _MakeForm(request, form):
     else:
         return form
 
-def _GetResValue(value:str, cat:PartCategoryModel):
-    """
-    Given a value, with a unit postfix, convert that to a value measurement
-    """
-    Units = MeasurementUnitModel.objects.filter(PartCategory = cat)
-
-    if value[-1].isalpha():
-        #We have a unit postfix on the value
-        l = value[-1:].upper()
-        u = Units.get(Q(Postfix__startswith=l))
-        return (value[:-1], u)
-        
-    else:
-        #No unit postfix, assume baseless
-        u = Units.annotate(length=Length('Postfix')).get(length=1)
-        return (value, u)
-
 def _GetParts(form:AddPartBase, cat:str):
     """
     Extract the container and Package for a part to add
@@ -61,25 +79,12 @@ def _GetParts(form:AddPartBase, cat:str):
 
     return (Cont, Pack, Cat)
 
-def add_part(request):
-    """Renders the home page."""
-    assert isinstance(request, HttpRequest)
-
-    return render(request,
-        'app/add_part.html',
-        {
-            'url':'/add_part',
-            'Form':None,
-            'PartForm':PartAddSelectForm(),
-            'title':'Add Part',
-        })
-
 def add_part_capacitor(request:HttpRequest):
     """
     Add a capacitor
     """
-    ErrorText:str = None
-    SuccessText:str = None
+    ErrorText :str = None
+    SuccessText :str = None
     Form = CapacitorForm
 
     if request.method == 'POST':
@@ -88,14 +93,14 @@ def add_part_capacitor(request:HttpRequest):
             try:
                 with transaction.atomic():
                     Cont, Pack, Cat = _GetParts(Form, "Capacitor")
-                    Value, Unit = _GetResValue(Form.cleaned_data['Value'], Cat)
                     Vol = _GetAttr("Voltage", Form.cleaned_data["Voltage"])
+                    Value, UnitPost = _UnitManager.SplitValue(Form.cleaned_data['Value'])
+                    Unit = _UnitManager.FindUnit(UnitPost)
 
-                    print(Value)
 
                     PM = PartModel(Name=Form.cleaned_data['Value'],
-                                   Value = Value,
-                                   Unit = Unit,
+                                   Value = None,
+                                   Unit = None,
                                    Package = Pack,
                                    Category = Cat)
 
@@ -129,8 +134,8 @@ def add_part_resistor(request):
     """
     Add a resistor
     """
-    ErrorText:str = None
-    SuccessText:str = None
+    ErrorText :str = None
+    SuccessText :str = None
 
     if request.method == 'POST':
         Form = ResistorForm(request.POST, request.FILES)
@@ -140,11 +145,11 @@ def add_part_resistor(request):
                 with transaction.atomic():
                     Cont, Pack, Cat = _GetParts(Form, "Resistor")
                     Tol = _GetAttr("tolerance", Form.cleaned_data["ResistorToler"])
-                    Value, Unit = _GetResValue(Form.cleaned_data['Value'], Cat)
+                    UnitID = Form.cleaned_data['Unit']
 
                     PM = PartModel(Name=Form.cleaned_data['Value'],
-                                   Value = Value,
-                                   Unit = Unit,
+                                   Value = Form.cleaned_data['Value'],
+                                   Unit = UnitID,
                                    Package = Pack,
                                    Category = Cat)
 
@@ -166,8 +171,8 @@ def add_part_resistor(request):
                                          'Container_ID':Form.cleaned_data["Container_ID"]})
                     Form.errors.clear()
                     SuccessText = "Part added"
-            except MeasurementUnitModel.DoesNotExist:
-                ErrorText = "Invalid value unit"
+            except:
+                raise
     else:
         Form = ResistorForm
 
@@ -181,3 +186,54 @@ def add_part_resistor(request):
             'PartForm':PartAddSelectForm({'Part':'r'}),
             'title':'Add Part',
         })
+
+class AddCapacitorView(AddPartBaseView):
+    """
+    View that allows adding a capacitor
+    """
+
+    def post(self, request:HttpRequest, *args, **kwargs):
+        self._Form = CapacitorForm(request.POST, request.FILES)
+
+        if self._Form.is_valid():
+            try:
+                with transaction.atomic():
+                    Cont, Pack, Cat = _GetParts(self._Form, "Capacitor")
+                    Tol = _GetAttr("Voltage", self._Form.cleaned_data["Voltage"])
+                    UnitID = self._Form.cleaned_data['Unit']
+
+                    PM = PartModel(Name=self._Form.cleaned_data['Value'],
+                                   Value = self._Form.cleaned_data['Value'],
+                                   UnitID = UnitID,
+                                   Package = Pack,
+                                   Category = Cat)
+
+                    if 'Datasheet' in self._Form.cleaned_data:
+                        PM.DataSheet = self._Form.cleaned_data['Datasheet']
+
+                    PM.save()
+                    PM.Attributes.add(Tol)
+                    PM.save()
+
+                    PC = PartCountModel(Quantity=self._Form.cleaned_data['PartQuantity'],
+                                        Location=Cont,
+                                        Part=PM)
+
+                    PC.save()
+                    
+                    self._Form.errors.clear()
+                    self.SuccessText = "Part added"
+            except django.db.utils.IntegrityError:
+                self.ErrorText = "Part already exists"
+
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self._Form = CapacitorForm()
+        return super().get(request, *args, **kwargs)
+
+    def GetPartTypeForm(self):
+        return PartAddSelectForm({'Part':'c'})
+
+    def GetURL(self):
+        return super().GetURL() + "/c"

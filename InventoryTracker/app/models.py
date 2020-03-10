@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from app.support import UnitManager
 
 class PackageModel(models.Model):
     """
@@ -93,21 +94,6 @@ class PartAttrModel(models.Model):
         return self.Name + "=" + self.Value
 
 
-class MeasurementUnitModel(models.Model):
-    """
-    Unit of measurement used for values
-    """
-    Postfix = models.CharField(max_length=5, unique=True,
-                            help_text="Unit pre or post fix for this unit")
-
-    PartCategory = models.ForeignKey(PartCategoryModel, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ['Postfix', 'PartCategory']
-
-    def __str__(self):
-        return self.Postfix
-
 class PartModel(models.Model):
     """
     This is an actual electronic part
@@ -121,7 +107,7 @@ class PartModel(models.Model):
     MfgPartNumber = models.CharField(max_length=128, blank=True,
                                      help_text='Manufactorers part number for this part')
 
-    Unit = models.ForeignKey(MeasurementUnitModel, on_delete=models.CASCADE, blank=True, null=True)
+    UnitID = models.IntegerField(null=True, blank=True)
 
     DataSheet = models.FileField(upload_to='data_sheets/%m/', null=True, blank=True,
                                  help_text="Datasheet for this part")
@@ -131,14 +117,19 @@ class PartModel(models.Model):
 
     Category = models.ForeignKey(PartCategoryModel, on_delete=models.CASCADE)
 
-    Attributes = models.ManyToManyField(PartAttrModel,
+    Attributes = models.ManyToManyField(PartAttrModel, blank= True,
                             help_text="Part this attribute is assigned to")
 
     class Meta:
-        unique_together = [['Name', 'Value'], ['Value', 'Unit']]
+        unique_together = [['Value', 'UnitID']]
 
     def __str__(self):
-        return "%s%s(%s)" % (self.Value, self.Unit.Postfix, self.Package.Name)
+        unit = UnitManager.GetUnitFromID(self.UnitID)
+        Unitfix = ""
+        if unit is not None:
+            Unitfix = unit.Designator
+
+        return "%s%s(%s)" % (self.Value, Unitfix, self.Package.Name)
 
 class PartCountModel(models.Model):
     """

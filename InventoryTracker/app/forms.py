@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from app.models import PackageModel, ContainerModel
+from app.support import UnitManager
 
 class FormBase(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -61,6 +62,8 @@ class ResistorForm(AddPartBase):
     Value = forms.CharField(label='Value', max_length=30,
                             help_text='Resistor value')
 
+    Unit = forms.ChoiceField(label="Unit", choices=UnitManager.ResistorChoices)
+
     ResistorToler = forms.ChoiceField(label='Tolerance', choices=(
         (0.05, "0.05%"),
         (0.1, "0.1%"),
@@ -72,15 +75,17 @@ class ResistorForm(AddPartBase):
         (10.0, "10%"),
         ))
 
-    field_order = ['Value', 'PartQuantity',]
+    field_order = ['Value', 'Unit', 'PartQuantity',]
 
 class CapacitorForm(AddPartBase):
     """
     Form to add a capacitor
     """
-    Value = forms.CharField(label='Value', max_length=30,
+    Value = forms.FloatField(label='Value',
                             help_text='Cap value')
+
+    Unit = forms.ChoiceField(label="Unit", choices=UnitManager.CapacitorChoices)
 
     Voltage = forms.FloatField(help_text="Voltage rating of the capacitor")
 
-    field_order = ['Value', 'Voltage', 'PartQuantity',]
+    field_order = ['Value', 'Unit', 'PartQuantity', 'Voltage',]

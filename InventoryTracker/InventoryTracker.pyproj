@@ -5,6 +5,7 @@
     <Name>InventoryTracker</Name>
     <RootNamespace>InventoryTracker</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <WebBrowserPort>5555</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,8 +40,18 @@
     </Compile>
     <Compile Include="app\forms.py" />
     <Compile Include="app\migrations\0001_initial.py" />
+    <Compile Include="app\migrations\0002_auto_20200309_1808.py" />
     <Compile Include="app\migrations\__init__.py" />
     <Compile Include="app\models.py" />
+    <Compile Include="app\support\units.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\support\unit_base.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\support\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\tests.py" />
     <Compile Include="app\urls.py">
       <SubType>Code</SubType>
@@ -83,6 +94,7 @@
     <Folder Include="app\static\app\content\" />
     <Folder Include="app\static\app\fonts\" />
     <Folder Include="app\static\app\scripts\" />
+    <Folder Include="app\support\" />
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
     <Folder Include="app\views\" />

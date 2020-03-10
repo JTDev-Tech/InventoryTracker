@@ -23,6 +23,8 @@
     {{ PartForm.Part }}
 </div>
 
+{% if Form %}
+
 <form action="{{ url }}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in Form %}
@@ -34,8 +36,11 @@
         {{ field.errors }}
     </div>
 {% endfor %}
+    
    <button type="submit" class="btn btn-primary">Save</button>
 </form>
+
+{% endif %}
 
 {% endblock %}
 
