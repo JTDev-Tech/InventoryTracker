@@ -91,7 +91,7 @@ class PartModel(models.Model):
     Name = models.CharField(max_length=256,
                             help_text="Name of the electronic part")
 
-    Value = models.IntegerField(blank=True, null=True,
+    Value = models.FloatField(blank=True, null=True,
         help_text = "Value for this part")
 
     MfgName = models.CharField(max_length=128, blank=True,
