@@ -157,6 +157,9 @@ class ProjectModel(models.Model):
 
     Description = models.TextField(help_text="Description for this project")
 
+    class Meta:
+        verbose_name = 'Project'
+
 class ProjectPartModel(models.Model):
     """
     Links a part to a project.
@@ -169,3 +172,6 @@ class ProjectPartModel(models.Model):
 
     Project = models.ForeignKey(ProjectModel, on_delete=models.CASCADE,
                                 help_text='Project this part is required for')
+
+    class Meta:
+        verbose_name = 'Project Part'

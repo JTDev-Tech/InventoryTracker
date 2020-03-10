@@ -1,22 +1,19 @@
 {% extends "app/layout.html" %}
 {% load static %}
 {% block content %}
-<table id="part_table" class="display">
+
+<table id="project_table" class="display">
     <thead>
         <tr>
-			<th></th>
-            <th>Value</th>
-            <th>Package</th>
-            <th>Category</th>
+            <th>Name</th>
+            <th>Description</th>
         </tr>
     </thead>
     <tbody>
-		{% for part in parts %}
+		{% for p in Projects %}
 		<tr>
-			<td></td>
-			<td>{{part.GetValue}}</td>
-			<td>{{ part.Package.Name }}</td>
-			<td>{{ part.Category.CategoryName }}</td>
+			<td>{{ p.Name }}</td>
+			<td>{{ p.Description }}</td>
 		</tr>
 		{% endfor %}
     </tbody>
@@ -29,7 +26,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function () {
-		var table = $('#part_table').DataTable({});
+		var table = $('#project_table').DataTable({});
 	});
 
 </script>

@@ -70,6 +70,9 @@
     <Compile Include="app\views\index.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="app\views\project_index.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\views_old.py" />
     <Compile Include="app\views\__init__.py">
       <SubType>Code</SubType>
@@ -103,6 +106,9 @@
     <Content Include="app\static\app\scripts\app_const.js" />
     <Content Include="app\templates\app\add_part.html" />
     <Content Include="app\templates\app\layout.html" />
+    <Content Include="app\templates\app\project_index.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="requirements.txt" />
     <Content Include="app\static\app\content\bootstrap.css" />
     <Content Include="app\static\app\content\bootstrap.min.css" />
