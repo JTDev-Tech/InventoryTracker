@@ -33,7 +33,6 @@ class PartCategoryModel(models.Model):
     def __str__(self):
         return self.CategoryName
 
-# Create your models here.
 class ShelfModel(models.Model):
     '''
     Defines a shelf that can hold containers full of parts
@@ -45,7 +44,6 @@ class ShelfModel(models.Model):
 
     def __str__(self):
         return self.Name
-
 
 class ContainerModel(models.Model):
     """
@@ -86,7 +84,6 @@ class PartAttrModel(models.Model):
     def __str__(self):
         return self.Name + "=" + self.Value
 
-
 class PartModel(models.Model):
     """
     This is an actual electronic part
@@ -96,6 +93,9 @@ class PartModel(models.Model):
 
     Value = models.IntegerField(blank=True, null=True,
         help_text = "Value for this part")
+
+    MfgName = models.CharField(max_length=128, blank=True,
+                               help_text="Name of the part manufactor")
 
     MfgPartNumber = models.CharField(max_length=128, blank=True,
                                      help_text='Manufactorers part number for this part')
@@ -133,6 +133,9 @@ class PartCountModel(models.Model):
     """
     Quantity = models.IntegerField(help_text="Part quantity")
 
+    Bin = models.CharField(max_length=32, blank=True,
+                           help_text="Bin ID this part is stored in")
+
     Location = models.ForeignKey(ContainerModel, on_delete=models.CASCADE,
                                  help_text="Location of these parts")
 
@@ -144,3 +147,25 @@ class PartCountModel(models.Model):
 
     def __str__(self)->str:
         return "%s(%i)" % (self.Part.Name, self.Quantity)
+
+class ProjectModel(models.Model):
+    """
+    Represents a project that will consume parts
+    """
+    Name = models.CharField(max_length=128,
+                            help_text='Name of this project')
+
+    Description = models.TextField(help_text="Description for this project")
+
+class ProjectPartModel(models.Model):
+    """
+    Links a part to a project.
+    """
+
+    Quantity = models.IntegerField(help_text='Quantity of parts required')
+
+    Part = models.ForeignKey(PartModel, on_delete=models.CASCADE,
+                             help_text="Part required")
+
+    Project = models.ForeignKey(ProjectModel, on_delete=models.CASCADE,
+                                help_text='Project this part is required for')

@@ -59,7 +59,7 @@ class ResistorForm(AddPartBase):
     Form for adding a resistor
     """
 
-    Value = forms.CharField(label='Value', max_length=30,
+    Value = forms.FloatField(label='Value',
                             help_text='Resistor value')
 
     Unit = forms.ChoiceField(label="Unit", choices=UnitManager.ResistorChoices)

@@ -5,10 +5,85 @@ from .unit_base import UnitBase
 
 _ResistorIDBase = 100
 _CIDB = 200
+_HIDB = 300
 
 _ReExp = re.compile(r'^(\d+)(\D*)$')
 
-class _UnitManager(object):
+class _HenryUnits(object):
+    """
+    This contains units for working with Henries
+    """
+
+    @property
+    def HenryUnit(self):
+        return UnitBase(postfix='H', id=_HIDB)
+
+    @property
+    def MilliHenryUnit(self):
+        return UnitBase('m', 1.0e-3, self.HenryUnit, id=_HIDB+1)
+
+    @property
+    def MicroHenryUnit(self):
+        return UnitBase('µ', 1.0e-6, self.HenryUnit, id=_HIDB+2)
+
+    @property
+    def NanoHenryUnit(self):
+        return UnitBase('n', 1.0e-3, self.HenryUnit, id=_HIDB+1)
+
+    @property
+    def PicoHenryUnit(self):
+        return UnitBase('p', 1.0e-3, self.HenryUnit, id=_HIDB+1)
+
+    @property
+    def HenryUnits(self):
+        return (
+            self.HenryUnit,
+            self.MilliHenryUnit,
+            self.MicroHenryUnit,
+            self.NanoHenryUnit,
+            self.PicoHenryUnit)
+
+    @property
+    def HenryChoices(self):
+        Res = list()
+
+        for x in self.HenryUnits:
+            Res.append((x.ID, x.Designator))
+
+        return Res
+
+class _OhmsUnits(object):
+    @property
+    def OhmsUnit(self):
+        return UnitBase(postfix='Ω', id=_ResistorIDBase + 0)
+
+    @property
+    def KOhmsUnit(self):
+        return UnitBase('K', 1000, self.OhmsUnit, id=_ResistorIDBase + 1)
+
+    @property
+    def MOhmsUnit(self):
+        return UnitBase('M', 1000000, self.OhmsUnit, id=_ResistorIDBase + 2)
+
+    @property
+    def ResistorUnits(self):
+        return (self.OhmsUnit,
+                self.KOhmsUnit,
+                self.MOhmsUnit)
+
+    @property
+    def ResistorChoices(self):
+        """
+        Get a list of choices for resistor values
+        """
+
+        Res = list()
+        for x in self.ResistorUnits:
+            Res.append((x.ID, x.Designator))
+
+        return Res
+
+class _UnitManager(_HenryUnits, _OhmsUnits):
     """
     Manager class for units
     """
@@ -35,7 +110,7 @@ class _UnitManager(object):
 
     @property
     def MicroFaradUnit(self):
-        return UnitBase('u', 1.0e-6, self.FaradUnit, id=_CIDB + 2)
+        return UnitBase('µ', 1.0e-6, self.FaradUnit, id=_CIDB + 2)
 
     @property
     def NanoFaradUnit(self):
@@ -45,23 +120,7 @@ class _UnitManager(object):
     def PicoFaradUnit(self):
         return UnitBase('p', 1.0e-12, self.FaradUnit, id=_CIDB + 4)
 
-    @property
-    def OhmsUnit(self):
-        return UnitBase(postfix='Ω', id=_ResistorIDBase + 0)
-
-    @property
-    def KOhmsUnit(self):
-        return UnitBase('K', 1000, self.OhmsUnit, id=_ResistorIDBase + 1)
-
-    @property
-    def MOhmsUnit(self):
-        return UnitBase('M', 1000000, self.OhmsUnit, id=_ResistorIDBase + 2)
-
-    @property
-    def ResistorUnits(self):
-        return (self.OhmsUnit,
-                self.KOhmsUnit,
-                self.MOhmsUnit)
+    
 
     @property
     def CapacitorUnits(self):
@@ -81,18 +140,6 @@ class _UnitManager(object):
         return Res
 
     @property
-    def ResistorChoices(self):
-        """
-        Get a list of choices for resistor values
-        """
-
-        Res = list()
-        for x in self.ResistorUnits:
-            Res.append((x.ID, x.Designator))
-
-        return Res
-
-    @property
     def MasterUnitList(self)->List[UnitBase]:
         """
         Returns a master list of all units
@@ -100,6 +147,7 @@ class _UnitManager(object):
         if self._MasterListCache is None:
             Res = [self.AmpUnit, self.VoltUnit]
             Res = Res + list(self.CapacitorUnits) + list(self.ResistorUnits)
+            Res = Res + list(self.HenryUnits)
             self._MasterListCache = tuple(Res)
 
         return self._MasterListCache
