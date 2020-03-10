@@ -63,12 +63,6 @@ def _GetAttr(name:str, value:str) -> PartAttrModel:
 
     return obj
 
-def _MakeForm(request, form):
-    if request.method == "POST":
-        return form(request.POST)
-    else:
-        return form
-
 def _GetParts(form:AddPartBase, cat:str):
     """
     Extract the container and Package for a part to add
@@ -79,113 +73,54 @@ def _GetParts(form:AddPartBase, cat:str):
 
     return (Cont, Pack, Cat)
 
-def add_part_capacitor(request:HttpRequest):
+class AddResistorView(AddPartBaseView):
     """
-    Add a capacitor
+    View class to add a resistor
     """
-    ErrorText :str = None
-    SuccessText :str = None
-    Form = CapacitorForm
+    def post(self, request:HttpRequest, *args, **kwargs):
+        self._Form = ResistorForm(request.POST, request.FILES)
 
-    if request.method == 'POST':
-        Form = CapacitorForm(request.POST, request.FILES)
-        if Form.is_valid():
+        if self._Form.is_valid():
             try:
                 with transaction.atomic():
-                    Cont, Pack, Cat = _GetParts(Form, "Capacitor")
-                    Vol = _GetAttr("Voltage", Form.cleaned_data["Voltage"])
-                    Value, UnitPost = _UnitManager.SplitValue(Form.cleaned_data['Value'])
-                    Unit = _UnitManager.FindUnit(UnitPost)
+                    Cont, Pack, Cat = _GetParts(self._Form, "Resistor")
+                    Tol = _GetAttr("Tolerance", self._Form.cleaned_data["ResistorToler"])
+                    UnitID = self._Form.cleaned_data['Unit']
 
-
-                    PM = PartModel(Name=Form.cleaned_data['Value'],
-                                   Value = None,
-                                   Unit = None,
+                    PM = PartModel(Name=self._Form.cleaned_data['Value'],
+                                   Value = self._Form.cleaned_data['Value'],
+                                   UnitID = UnitID,
                                    Package = Pack,
                                    Category = Cat)
 
-                    if 'Datasheet' in Form.cleaned_data:
-                        PM.DataSheet = Form.cleaned_data['Datasheet']
-
-                    PM.save()
-                    PM.Attributes.add(Vol)
-                    PM.save()
-
-                    PC = PartCountModel(Quantity=Form.cleaned_data['PartQuantity'],
-                                        Location=Cont,
-                                        Part=PM)
-
-                    PC.save()
-            except:
-                raise
-
-    return render(request,
-        'app/add_part.html',
-        {
-            "ErrorText":ErrorText,
-            "SuccessText":SuccessText,
-            'url':request.path_info,
-            'Form':Form,
-            'PartForm':PartAddSelectForm({'Part':'c'}),
-            'title':'Add Part',
-        })
-
-def add_part_resistor(request):
-    """
-    Add a resistor
-    """
-    ErrorText :str = None
-    SuccessText :str = None
-
-    if request.method == 'POST':
-        Form = ResistorForm(request.POST, request.FILES)
-
-        if Form.is_valid():
-            try:
-                with transaction.atomic():
-                    Cont, Pack, Cat = _GetParts(Form, "Resistor")
-                    Tol = _GetAttr("tolerance", Form.cleaned_data["ResistorToler"])
-                    UnitID = Form.cleaned_data['Unit']
-
-                    PM = PartModel(Name=Form.cleaned_data['Value'],
-                                   Value = Form.cleaned_data['Value'],
-                                   Unit = UnitID,
-                                   Package = Pack,
-                                   Category = Cat)
-
-                    if 'Datasheet' in Form.cleaned_data:
-                        PM.DataSheet = Form.cleaned_data['Datasheet']
+                    if 'Datasheet' in self._Form.cleaned_data:
+                        PM.DataSheet = self._Form.cleaned_data['Datasheet']
 
                     PM.save()
                     PM.Attributes.add(Tol)
                     PM.save()
 
-                    PC = PartCountModel(Quantity=Form.cleaned_data['PartQuantity'],
+                    PC = PartCountModel(Quantity=self._Form.cleaned_data['PartQuantity'],
                                         Location=Cont,
                                         Part=PM)
 
                     PC.save()
-                    
-                    Form = ResistorForm({'ResistorToler':Form.cleaned_data["ResistorToler"],
-                                         'Package_ID':Form.cleaned_data['Package_ID'],
-                                         'Container_ID':Form.cleaned_data["Container_ID"]})
-                    Form.errors.clear()
-                    SuccessText = "Part added"
-            except:
-                raise
-    else:
-        Form = ResistorForm
+                    self._Form.errors.clear()
+                    self.SuccessText = "Part added"
+            except django.db.utils.IntegrityError:
+                self.ErrorText = "Part already exists"
 
-    return render(request,
-        'app/add_part.html',
-        {
-            "ErrorText":ErrorText,
-            "SuccessText":SuccessText,
-            'url':'/add_part/r',
-            'Form':Form,
-            'PartForm':PartAddSelectForm({'Part':'r'}),
-            'title':'Add Part',
-        })
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self._Form = ResistorForm()
+        return super().get(request, *args, **kwargs)
+
+    def GetPartTypeForm(self):
+        return PartAddSelectForm({'Part':'r'})
+
+    def GetURL(self):
+        return super().GetURL() + "/r"
 
 class AddCapacitorView(AddPartBaseView):
     """
