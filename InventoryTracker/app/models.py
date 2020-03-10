@@ -46,13 +46,6 @@ class ShelfModel(models.Model):
     def __str__(self):
         return self.Name
 
-    def ToJsonDict(self):
-        """
-        Converts the model to a dictionary suitable for conversion to JSON
-        """
-
-        return {"ID":self.pk, "Name":self.Name, "LocationID":self.LocationID}
-
 
 class ContainerModel(models.Model):
     """
@@ -122,6 +115,9 @@ class PartModel(models.Model):
 
     class Meta:
         unique_together = [['Value', 'UnitID']]
+
+    def GetValue(self):
+        return '%i%s' % (self.Value, UnitManager.GetUnitFromID(self.UnitID).Designator)
 
     def __str__(self):
         unit = UnitManager.GetUnitFromID(self.UnitID)

@@ -2,6 +2,7 @@ from django.contrib import admin
 from app.models import ShelfModel, ContainerModel, PackageModel
 from app.models import PartCategoryModel, PartModel, PartAttrModel, PartCountModel
 
+
 class PartCountModelAdminInline(admin.TabularInline):
     model = PartCountModel
 
@@ -11,7 +12,6 @@ class PartAttrAdminInline(admin.TabularInline):
 
 class PartModelAdmin(admin.ModelAdmin):
     inlines = [PartCountModelAdminInline,]
-
 
 admin.site.register(ShelfModel)
 admin.site.register(ContainerModel)

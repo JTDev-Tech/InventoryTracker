@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import re
 
 from .unit_base import UnitBase
@@ -12,12 +12,18 @@ class _UnitManager(object):
     """
     Manager class for units
     """
-   
-    AmpUnit = UnitBase(postfix='A')
+
+    def __init__(self, *args, **kwargs):
+        self._MasterListCache = None;
+        return super().__init__(*args, **kwargs)
+
+    @property
+    def AmpUnit(self):
+        return UnitBase(postfix='A', id=1)
 
     @property
     def VoltUnit(self):
-        return UnitBase(postfix='v')
+        return UnitBase(postfix='v', id=20)
 
     @property
     def FaradUnit(self):
@@ -86,15 +92,24 @@ class _UnitManager(object):
 
         return Res
 
+    @property
+    def MasterUnitList(self)->List[UnitBase]:
+        """
+        Returns a master list of all units
+        """
+        if self._MasterListCache is None:
+            Res = [self.AmpUnit, self.VoltUnit]
+            Res = Res + list(self.CapacitorUnits) + list(self.ResistorUnits)
+            self._MasterListCache = tuple(Res)
+
+        return self._MasterListCache
+
+
     def GetUnitFromID(self, id:int)->UnitBase:
         """
         Given a unit ID, Attempt to find the unit
         """
-        for x in self.ResistorUnits:
-            if id == x.ID:
-                return x
-
-        for x in self.CapacitorUnits:
+        for x in self.MasterUnitList:
             if id == x.ID:
                 return x
 
