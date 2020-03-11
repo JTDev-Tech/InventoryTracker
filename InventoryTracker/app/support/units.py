@@ -157,6 +157,9 @@ class _UnitManager(_HenryUnits, _OhmsUnits):
         """
         Given a unit ID, Attempt to find the unit
         """
+        if id is None:
+            return None
+
         id = int(id)
         for x in self.MasterUnitList:
             if id == x.ID:

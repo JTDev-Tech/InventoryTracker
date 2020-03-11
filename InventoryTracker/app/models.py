@@ -171,6 +171,8 @@ class ProjectModel(models.Model):
     def __str__(self):
         return self.Name
 
+
+
 class ProjectPartModel(models.Model):
     """
     Links a part to a project.

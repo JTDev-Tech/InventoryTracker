@@ -6,6 +6,7 @@
     <RootNamespace>InventoryTracker</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <WebBrowserPort>5555</WebBrowserPort>
+    <TestFramework>unittest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,7 +52,10 @@
     <Compile Include="app\support\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="app\tests.py" />
+    <Compile Include="app\tests-old.py" />
+    <Compile Include="app\tests\tests_partmodel.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\urls.py">
       <SubType>Code</SubType>
     </Compile>
@@ -89,6 +93,9 @@
     <Compile Include="InventoryTracker\settings.py" />
     <Compile Include="InventoryTracker\urls.py" />
     <Compile Include="InventoryTracker\wsgi.py" />
+    <Compile Include="app\tests\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
@@ -104,6 +111,7 @@
     <Folder Include="app\templates\app\" />
     <Folder Include="app\views\" />
     <Folder Include="InventoryTracker\" />
+    <Folder Include="app\tests\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\static\app\scripts\app_const.js" />
