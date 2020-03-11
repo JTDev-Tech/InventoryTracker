@@ -10,4 +10,5 @@ urlpatterns = [
     path('add_part/r', views.AddResistorView.as_view(), name='add_part_resistor'),
 
     path('projects', views.ProjectIndexView.as_view(), name='projects'),
+    path('projects/<int:id>/bom', views.ProjectBOMView.as_view(), name='bom'),
 ]

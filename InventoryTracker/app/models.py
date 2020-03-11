@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from django.db.models import Sum
 from app.support import UnitManager
 
 class PackageModel(models.Model):
@@ -117,7 +118,14 @@ class PartModel(models.Model):
         unique_together = [['Value', 'UnitID']]
 
     def GetValue(self):
-        return '%i%s' % (self.Value, UnitManager.GetUnitFromID(self.UnitID).Designator)
+        return '{:-n}{}'.format(self.Value, UnitManager.GetUnitFromID(self.UnitID).Designator)
+
+    def GetAvailable(self):
+        """
+        Get the total number of parts available across all containers
+        """
+        s = self.partcountmodel_set.aggregate(Sum('Quantity'))
+        return s['Quantity__sum'];
 
     def __str__(self):
         unit = UnitManager.GetUnitFromID(self.UnitID)
@@ -160,6 +168,9 @@ class ProjectModel(models.Model):
     class Meta:
         verbose_name = 'Project'
 
+    def __str__(self):
+        return self.Name
+
 class ProjectPartModel(models.Model):
     """
     Links a part to a project.
@@ -175,3 +186,6 @@ class ProjectPartModel(models.Model):
 
     class Meta:
         verbose_name = 'Project Part'
+
+    def __str__(self):
+        return '%s(%i)' % (self.Part.GetValue(), self.Quantity)

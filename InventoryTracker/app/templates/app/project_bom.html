@@ -5,17 +5,21 @@
 <table id="project_table" class="display">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Description</th>
-			<th>BOM</th>
+            <th>Part</th>
+			<th>Value</th>
+            <th>Package</th>
+			<th>Quantity</th>
+			<th>On Hand</th>
         </tr>
     </thead>
     <tbody>
-		{% for p in Projects %}
+		{% for p in Parts %}
 		<tr>
-			<td>{{ p.Name }}</td>
-			<td>{{ p.Description }}</td>
-			<td><a href="{% url 'bom' id=p.pk %}">BOM</a></td>
+			<td>{{ p.Part.Category.CategoryName }}</td>
+			<td>{{ p.Part.GetValue }}</td>
+			<td>{{ p.Part.Package.Name }}</td>
+			<td>{{ p.Quantity }}</td>
+			<td>{{ p.Part.GetAvailable }}</td>
 		</tr>
 		{% endfor %}
     </tbody>
@@ -33,3 +37,4 @@
 
 </script>
 {% endblock %}
+

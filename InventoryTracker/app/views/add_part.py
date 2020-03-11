@@ -106,7 +106,7 @@ class AddResistorView(AddPartBaseView):
 
                     PC.save()
                     self._Form.errors.clear()
-                    self.SuccessText = "Part added"
+                    self.SuccessText = "Resistor %s(%s) added" % (PM.GetValue(), PM.Package.Name)
             except django.db.utils.IntegrityError:
                 self.ErrorText = "Part already exists"
 
@@ -157,7 +157,7 @@ class AddCapacitorView(AddPartBaseView):
                     PC.save()
                     
                     self._Form.errors.clear()
-                    self.SuccessText = "Part added"
+                    self.SuccessText = "Capacitor %s(%s) added" % (PM.GetValue(), PM.Package.Name)
             except django.db.utils.IntegrityError:
                 self.ErrorText = "Part already exists"
 
