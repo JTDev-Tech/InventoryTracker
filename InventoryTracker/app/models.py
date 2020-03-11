@@ -3,7 +3,7 @@ Definition of models.
 """
 
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from app.support import UnitManager
 
 class PackageModel(models.Model):
@@ -171,8 +171,6 @@ class ProjectModel(models.Model):
     def __str__(self):
         return self.Name
 
-
-
 class ProjectPartModel(models.Model):
     """
     Links a part to a project.
@@ -188,6 +186,31 @@ class ProjectPartModel(models.Model):
 
     class Meta:
         verbose_name = 'Project Part'
+        unique_together=['Part', 'Project']
 
     def __str__(self):
         return '%s(%i)' % (self.Part.GetValue(), self.Quantity)
+
+class BOMDesignatorModel(models.Model):
+    """
+    This is a designator that is applied to a project part.
+    For example U2 or R7
+    """
+
+    Number = models.IntegerField(help_text='Numeric part of the designator')
+
+    Letter = models.CharField(max_length=2,
+                              help_text="Letter part of the designator")
+
+    PartModel = models.ForeignKey(ProjectPartModel, on_delete=models.CASCADE,
+                                  help_text='Project part this designator is applied to')
+
+    class Meta:
+        verbose_name='Part Designator'
+        constraints = [
+            models.UniqueConstraint(fields=['Number', 'Letter', 'PartModel'], name='BOMNumberLetterPartConstrant'),
+            models.CheckConstraint(check=Q(Number__gte=0), name='BOMNumbergte0')
+        ]
+
+    def __str__(self):
+        return self.Letter + str(self.Number)

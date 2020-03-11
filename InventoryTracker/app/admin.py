@@ -1,7 +1,7 @@
 from django.contrib import admin
 from app.models import ShelfModel, ContainerModel, PackageModel
 from app.models import PartCategoryModel, PartModel, PartAttrModel, PartCountModel
-from app.models import ProjectModel, ProjectPartModel
+from app.models import ProjectModel, ProjectPartModel, BOMDesignatorModel
 
 
 class PartCountModelAdminInline(admin.TabularInline):
@@ -24,3 +24,4 @@ admin.site.register(PartCountModel)
 
 admin.site.register(ProjectModel)
 admin.site.register(ProjectPartModel)
+admin.site.register(BOMDesignatorModel)
