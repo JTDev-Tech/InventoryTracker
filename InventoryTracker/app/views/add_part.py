@@ -99,12 +99,13 @@ class AddResistorView(AddPartBaseView):
                     PM.save()
                     PM.Attributes.add(Tol)
                     PM.save()
+                    PartQuantity = self._Form.cleaned_data['PartQuantity']
+                    if PartQuantity > 0:
+                        PC = PartCountModel(Quantity=PartQuantity,
+                                            Location=Cont,
+                                            Part=PM)
+                        PC.save()
 
-                    PC = PartCountModel(Quantity=self._Form.cleaned_data['PartQuantity'],
-                                        Location=Cont,
-                                        Part=PM)
-
-                    PC.save()
                     self._Form.errors.clear()
                     self.SuccessText = "Resistor %s(%s) added" % (PM.GetValue(), PM.Package.Name)
             except django.db.utils.IntegrityError:
@@ -150,11 +151,12 @@ class AddCapacitorView(AddPartBaseView):
                     PM.Attributes.add(Tol)
                     PM.save()
 
-                    PC = PartCountModel(Quantity=self._Form.cleaned_data['PartQuantity'],
-                                        Location=Cont,
-                                        Part=PM)
-
-                    PC.save()
+                    PartQuantity = self._Form.cleaned_data['PartQuantity']
+                    if PartQuantity > 0:
+                        PC = PartCountModel(Quantity=self._Form.cleaned_data['PartQuantity'],
+                                            Location=Cont,
+                                            Part=PM)
+                        PC.save()
                     
                     self._Form.errors.clear()
                     self.SuccessText = "Capacitor %s(%s) added" % (PM.GetValue(), PM.Package.Name)

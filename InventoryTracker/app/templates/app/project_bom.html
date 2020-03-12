@@ -10,6 +10,7 @@
             <th>Package</th>
 			<th>Quantity</th>
 			<th>On Hand</th>
+			<th>Designator</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
 			<td>{{ p.Part.Package.Name }}</td>
 			<td>{{ p.Quantity }}</td>
 			<td>{{ p.Part.GetAvailable }}</td>
+			<td>{{ p.GetDesignators }}</td>
 		</tr>
 		{% endfor %}
     </tbody>

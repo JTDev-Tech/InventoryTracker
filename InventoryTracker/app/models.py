@@ -125,7 +125,10 @@ class PartModel(models.Model):
         Get the total number of parts available across all containers
         """
         s = self.partcountmodel_set.aggregate(Sum('Quantity'))
-        return s['Quantity__sum'];
+        A = s['Quantity__sum']
+        if A is None:
+            A = 0
+        return int(A)
 
     def __str__(self):
         unit = UnitManager.GetUnitFromID(self.UnitID)
@@ -133,7 +136,8 @@ class PartModel(models.Model):
         if unit is not None:
             Unitfix = unit.Designator
 
-        return "%s%s(%s)" % (self.Value, Unitfix, self.Package.Name)
+        return '{:-n}{}({})'.format(self.Value, Unitfix, self.Package.Name)
+        
 
 class PartCountModel(models.Model):
     """
@@ -154,7 +158,7 @@ class PartCountModel(models.Model):
         unique_together = [['Location', 'Part']]
 
     def __str__(self)->str:
-        return "%s(%i)" % (self.Part.Name, self.Quantity)
+        return '{}{:-n}'.format(self.Part.Name, self.Quantity)
 
 class ProjectModel(models.Model):
     """
@@ -189,7 +193,14 @@ class ProjectPartModel(models.Model):
         unique_together=['Part', 'Project']
 
     def __str__(self):
-        return '%s(%i)' % (self.Part.GetValue(), self.Quantity)
+        return '{} - {}'.format(self.Part, self.Project)
+
+    def GetDesignators(self):
+        """
+        Get a list of designators seperated by comma
+        """
+        d = self.bomdesignatormodel_set.all()
+        return ','.join([str(x) for x in d])
 
 class BOMDesignatorModel(models.Model):
     """
