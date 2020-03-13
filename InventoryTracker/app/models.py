@@ -5,6 +5,7 @@ Definition of models.
 from django.db import models
 from django.db.models import Sum, Q
 from app.support import UnitManager
+from app.support import CommonAttrNames
 
 class PackageModel(models.Model):
     """
@@ -60,12 +61,6 @@ class ContainerModel(models.Model):
     class Meta:
         unique_together = [['LocationID', 'Shelf'], ['LocationID', 'Name']]
 
-    def ToJsonDict(self):
-        """
-        Converts the model to a dictionary suitable for conversion to JSON
-        """
-        return {"ID":self.pk, "Name":self.Name, "LocationID":self.LocationID, "Shelf":self.Shelf.ToJsonDict()}
-
     def __str__(self):
         return self.Name
 
@@ -118,6 +113,13 @@ class PartModel(models.Model):
         unique_together = [['Value', 'UnitID']]
 
     def GetValue(self):
+        f = '{:-n}{}'
+        try:
+            ValueUnitID = self.Attributes.get(Name = CommonAttrNames.ValueUnit)
+            Unit = UnitManager.GetUnitFromID(int(ValueUnitID.Value))
+            return f.format(self.Value, Unit.Designator)
+        except PartAttrModel.DoesNotExist:
+            pass
         return '{:-n}{}'.format(self.Value, UnitManager.GetUnitFromID(self.UnitID).Designator)
 
     def GetAvailable(self):

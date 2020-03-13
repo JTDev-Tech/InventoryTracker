@@ -12,6 +12,7 @@ from app.models import PartModel, PartCountModel, ContainerModel
 from app.models import PackageModel, PartCategoryModel, PartAttrModel
 
 from app.support.units import UnitManager
+from app.support import CommonAttrNames
 
 class AddPartBaseView(TemplateView):
     """
@@ -83,13 +84,13 @@ class AddResistorView(AddPartBaseView):
         if self._Form.is_valid():
             try:
                 with transaction.atomic():
-                    Cont, Pack, Cat = _GetParts(self._Form, "Resistor")
-                    Tol = _GetAttr("Tolerance", self._Form.cleaned_data["ResistorToler"])
                     UnitID = self._Form.cleaned_data['Unit']
+                    Cont, Pack, Cat = _GetParts(self._Form, "Resistor")
+                    Tol = _GetAttr(CommonAttrNames.Tolerance, self._Form.cleaned_data["ResistorToler"])
+                    ValueUnit = _GetAttr(CommonAttrNames.ValueUnit, UnitID)
 
                     PM = PartModel(Name=self._Form.cleaned_data['Value'],
                                    Value = self._Form.cleaned_data['Value'],
-                                   UnitID = UnitID,
                                    Package = Pack,
                                    Category = Cat)
 
@@ -98,6 +99,7 @@ class AddResistorView(AddPartBaseView):
 
                     PM.save()
                     PM.Attributes.add(Tol)
+                    PM.Attributes.add(ValueUnit)
                     PM.save()
                     PartQuantity = self._Form.cleaned_data['PartQuantity']
                     if PartQuantity > 0:

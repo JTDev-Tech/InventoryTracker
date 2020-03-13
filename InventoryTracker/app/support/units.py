@@ -98,7 +98,7 @@ class _UnitManager(_HenryUnits, _OhmsUnits):
 
     @property
     def VoltUnit(self):
-        return UnitBase(postfix='v', id=20)
+        return UnitBase(postfix='V', id=20)
 
     @property
     def FaradUnit(self):

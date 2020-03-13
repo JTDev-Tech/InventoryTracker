@@ -22,3 +22,10 @@ class PartModelTests(TestCase):
             s = str(x)
             self.assertIsNotNone(s)
             self.assertGreaterEqual(len(s), 1)
+        return
+
+    def test_GetValueNoValueUnit(self):
+       P:PartModel = PartModel.objects.get(Name='TXB0102')
+       v = P.GetValue();
+       self.assertIsNotNone(v)
+       self.assertGreaterEqual(len(v), 1)

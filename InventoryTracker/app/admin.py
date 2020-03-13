@@ -3,7 +3,6 @@ from app.models import ShelfModel, ContainerModel, PackageModel
 from app.models import PartCategoryModel, PartModel, PartAttrModel, PartCountModel
 from app.models import ProjectModel, ProjectPartModel, BOMDesignatorModel
 
-
 class PartCountModelAdminInline(admin.TabularInline):
     model = PartCountModel
 
@@ -11,6 +10,14 @@ class PartAttrAdminInline(admin.TabularInline):
     model = PartAttrModel
     min_num = 1
 
+class BOMDesignatorAdminInline(admin.TabularInline):
+    model = BOMDesignatorModel
+
+@admin.register(ProjectPartModel)
+class ProjectPartModelAdmin(admin.ModelAdmin):
+    inlines = [BOMDesignatorAdminInline,]
+
+@admin.register(PartModel)
 class PartModelAdmin(admin.ModelAdmin):
     inlines = [PartCountModelAdminInline,]
 
@@ -18,10 +25,8 @@ admin.site.register(ShelfModel)
 admin.site.register(ContainerModel)
 admin.site.register(PackageModel)
 admin.site.register(PartCategoryModel)
-admin.site.register(PartModel, PartModelAdmin)
 admin.site.register(PartAttrModel)
 admin.site.register(PartCountModel)
 
 admin.site.register(ProjectModel)
-admin.site.register(ProjectPartModel)
 admin.site.register(BOMDesignatorModel)
