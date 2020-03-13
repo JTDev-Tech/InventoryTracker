@@ -7,12 +7,12 @@ from django.urls import resolve
 from django.views.generic.base import TemplateView
 import django.db.utils
 
-from app.forms import ResistorForm, PartAddSelectForm, AddPartBase, CapacitorForm
-from app.models import PartModel, PartCountModel, ContainerModel
-from app.models import PackageModel, PartCategoryModel, PartAttrModel
+from inventory.forms import ResistorForm, PartAddSelectForm, AddPartBase, CapacitorForm
+from inventory.models import PartModel, PartCountModel, ContainerModel
+from inventory.models import PackageModel, PartCategoryModel, PartAttrModel
 
-from app.support.units import UnitManager
-from app.support import CommonAttrNames
+from inventory.support.units import UnitManager
+from inventory.support import CommonAttrNames
 
 class AddPartBaseView(TemplateView):
     """

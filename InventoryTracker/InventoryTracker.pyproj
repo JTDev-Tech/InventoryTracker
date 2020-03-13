@@ -36,61 +36,59 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="app\admin.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\forms.py" />
-    <Compile Include="app\migrations\0001_initial.py" />
+    <Compile Include="app\admin.py" />
+    <Compile Include="app\apps.py" />
     <Compile Include="app\migrations\__init__.py" />
     <Compile Include="app\models.py" />
-    <Compile Include="app\support\common_attr_names.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\support\units.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\support\unit_base.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\support\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\tests-old.py" />
-    <Compile Include="app\tests\tests_partmodel.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\tests\test_addpart.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\urls.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\add_part.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\api_container.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\api_packages.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\api_part_list.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\index.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\project_bom.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views\project_index.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="app\views_old.py" />
-    <Compile Include="app\views\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="app\tests.py" />
+    <Compile Include="app\views.py" />
     <Compile Include="app\__init__.py" />
+    <Compile Include="inventory\admin.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\forms.py" />
+    <Compile Include="inventory\migrations\0001_initial.py" />
+    <Compile Include="inventory\migrations\__init__.py" />
+    <Compile Include="inventory\models.py" />
+    <Compile Include="inventory\support\common_attr_names.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\support\units.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\support\unit_base.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\support\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\tests-old.py" />
+    <Compile Include="inventory\tests\tests_partmodel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\tests\test_addpart.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\views\add_part.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\views\index.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="projects\views\bom.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="projects\views\index.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\views_old.py" />
+    <Compile Include="inventory\views\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="inventory\__init__.py" />
     <Compile Include="InventoryTracker\asgi.py">
       <SubType>Code</SubType>
     </Compile>
@@ -99,45 +97,64 @@
     <Compile Include="InventoryTracker\settings.py" />
     <Compile Include="InventoryTracker\urls.py" />
     <Compile Include="InventoryTracker\wsgi.py" />
-    <Compile Include="app\tests\__init__.py">
+    <Compile Include="inventory\tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="projects\admin.py" />
+    <Compile Include="projects\apps.py" />
+    <Compile Include="projects\migrations\__init__.py" />
+    <Compile Include="projects\models.py" />
+    <Compile Include="projects\tests.py" />
+    <Compile Include="projects\views\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="projects\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
-    <Folder Include="app\fixtures\" />
     <Folder Include="app\migrations\" />
-    <Folder Include="app\static\" />
-    <Folder Include="app\static\app\" />
-    <Folder Include="app\static\app\content\" />
-    <Folder Include="app\static\app\fonts\" />
-    <Folder Include="app\static\app\scripts\" />
-    <Folder Include="app\support\" />
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
-    <Folder Include="app\views\" />
+    <Folder Include="inventory\" />
+    <Folder Include="inventory\fixtures\" />
+    <Folder Include="inventory\migrations\" />
+    <Folder Include="inventory\static\" />
+    <Folder Include="inventory\static\app\" />
+    <Folder Include="inventory\static\app\content\" />
+    <Folder Include="inventory\static\app\fonts\" />
+    <Folder Include="inventory\static\app\scripts\" />
+    <Folder Include="inventory\support\" />
+    <Folder Include="inventory\templates\" />
+    <Folder Include="inventory\templates\inventory\" />
+    <Folder Include="inventory\views\" />
     <Folder Include="InventoryTracker\" />
-    <Folder Include="app\tests\" />
+    <Folder Include="inventory\tests\" />
+    <Folder Include="projects\" />
+    <Folder Include="projects\migrations\" />
+    <Folder Include="projects\templates\" />
+    <Folder Include="projects\templates\projects\" />
+    <Folder Include="projects\views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\static\app\scripts\app_const.js" />
-    <Content Include="app\templates\app\add_part.html" />
+    <Content Include="inventory\static\app\scripts\app_const.js" />
+    <Content Include="inventory\templates\inventory\add_part.html" />
     <Content Include="app\templates\app\layout.html" />
-    <Content Include="app\templates\app\project_bom.html">
+    <Content Include="projects\templates\projects\project_bom.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="app\templates\app\project_index.html">
+    <Content Include="projects\templates\projects\project_index.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="projects\templates\projects\index.html" />
     <Content Include="requirements.txt" />
-    <Content Include="app\static\app\content\bootstrap.css" />
-    <Content Include="app\static\app\content\bootstrap.min.css" />
-    <Content Include="app\static\app\content\site.css" />
-    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="app\templates\app\index.html" />
+    <Content Include="inventory\static\app\content\bootstrap.css" />
+    <Content Include="inventory\static\app\content\bootstrap.min.css" />
+    <Content Include="inventory\static\app\content\site.css" />
+    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="inventory\templates\inventory\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">

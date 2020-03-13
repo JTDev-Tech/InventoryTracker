@@ -6,8 +6,8 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
-from app.models import PackageModel, ContainerModel
-from app.support import UnitManager
+from .models import PackageModel, ContainerModel
+from .support import UnitManager
 
 class FormBase(forms.Form):
     def __init__(self, *args, **kwargs):

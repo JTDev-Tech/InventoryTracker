@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest
-from app.models import PartModel
+
+from inventory.models import PartModel
 
 def home(request):
     """Renders the home page."""
