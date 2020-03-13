@@ -137,12 +137,11 @@ class AddCapacitorView(AddPartBaseView):
             try:
                 with transaction.atomic():
                     Cont, Pack, Cat = _GetParts(self._Form, "Capacitor")
-                    Tol = _GetAttr("Voltage", self._Form.cleaned_data["Voltage"])
-                    UnitID = self._Form.cleaned_data['Unit']
+                    Tol = _GetAttr(CommonAttrNames.Voltage, self._Form.cleaned_data["Voltage"])
+                    ValueUnit = _GetAttr(CommonAttrNames.ValueUnit, self._Form.cleaned_data['Unit'])
 
                     PM = PartModel(Name=self._Form.cleaned_data['Value'],
                                    Value = self._Form.cleaned_data['Value'],
-                                   UnitID = UnitID,
                                    Package = Pack,
                                    Category = Cat)
 
@@ -151,6 +150,7 @@ class AddCapacitorView(AddPartBaseView):
 
                     PM.save()
                     PM.Attributes.add(Tol)
+                    PM.Attributes.add(ValueUnit)
                     PM.save()
 
                     PartQuantity = self._Form.cleaned_data['PartQuantity']

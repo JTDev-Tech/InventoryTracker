@@ -59,6 +59,9 @@
     <Compile Include="app\tests\tests_partmodel.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="app\tests\test_addpart.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\urls.py">
       <SubType>Code</SubType>
     </Compile>

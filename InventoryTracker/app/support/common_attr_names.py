@@ -11,6 +11,10 @@ class CommonAttrNamesMeta(type):
     def ValueUnit(cls)->str:
         return "ValueUnit"
 
+    @property
+    def Voltage(cls)->str:
+        return "Voltage"
+
 class CommonAttrNames(object, metaclass=CommonAttrNamesMeta):
     """
     Class that contains common attribute names used throughout the application

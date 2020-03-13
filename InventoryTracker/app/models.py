@@ -96,12 +96,10 @@ class PartModel(models.Model):
     MfgPartNumber = models.CharField(max_length=128, blank=True,
                                      help_text='Manufactorers part number for this part')
 
-    UnitID = models.IntegerField(null=True, blank=True)
-
     DataSheet = models.FileField(upload_to='data_sheets/%m/', null=True, blank=True,
                                  help_text="Datasheet for this part")
 
-    Package = models.ForeignKey(PackageModel, on_delete=models.CASCADE,
+    Package = models.ForeignKey(PackageModel, on_delete=models.CASCADE, null=True, blank=True,
                                 help_text="Package of this part")
 
     Category = models.ForeignKey(PartCategoryModel, on_delete=models.CASCADE)
@@ -109,18 +107,20 @@ class PartModel(models.Model):
     Attributes = models.ManyToManyField(PartAttrModel, blank= True,
                             help_text="Part this attribute is assigned to")
 
-    class Meta:
-        unique_together = [['Value', 'UnitID']]
-
     def GetValue(self):
-        f = '{:-n}{}'
+        Res = self.Name
         try:
             ValueUnitID = self.Attributes.get(Name = CommonAttrNames.ValueUnit)
             Unit = UnitManager.GetUnitFromID(int(ValueUnitID.Value))
-            return f.format(self.Value, Unit.Designator)
+            Res = '{:-n}{}'.format(self.Value, Unit.Designator)
         except PartAttrModel.DoesNotExist:
+            #No value unit present
             pass
-        return '{:-n}{}'.format(self.Value, UnitManager.GetUnitFromID(self.UnitID).Designator)
+        except ValueError:
+            #This might be thrown of ValueUnit attribute has a value other then a number
+            pass
+
+        return Res
 
     def GetAvailable(self):
         """
@@ -133,12 +133,7 @@ class PartModel(models.Model):
         return int(A)
 
     def __str__(self):
-        unit = UnitManager.GetUnitFromID(self.UnitID)
-        Unitfix = ""
-        if unit is not None:
-            Unitfix = unit.Designator
-
-        return '{:-n}{}({})'.format(self.Value, Unitfix, self.Package.Name)
+        return self.GetValue()
         
 
 class PartCountModel(models.Model):
