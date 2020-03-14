@@ -78,6 +78,9 @@
     <Compile Include="inventory\views\index.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="projects\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="projects\views\bom.py">
       <SubType>Code</SubType>
     </Compile>
@@ -116,13 +119,12 @@
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
     <Folder Include="inventory\" />
-    <Folder Include="inventory\fixtures\" />
     <Folder Include="inventory\migrations\" />
-    <Folder Include="inventory\static\" />
-    <Folder Include="inventory\static\app\" />
-    <Folder Include="inventory\static\app\content\" />
-    <Folder Include="inventory\static\app\fonts\" />
-    <Folder Include="inventory\static\app\scripts\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\static\app\" />
+    <Folder Include="app\static\app\content\" />
+    <Folder Include="app\static\app\fonts\" />
+    <Folder Include="app\static\app\scripts\" />
     <Folder Include="inventory\support\" />
     <Folder Include="inventory\templates\" />
     <Folder Include="inventory\templates\inventory\" />
@@ -136,7 +138,7 @@
     <Folder Include="projects\views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="inventory\static\app\scripts\app_const.js" />
+    <Content Include="app\static\app\scripts\app_const.js" />
     <Content Include="inventory\templates\inventory\add_part.html" />
     <Content Include="app\templates\app\layout.html" />
     <Content Include="projects\templates\projects\project_bom.html">
@@ -147,13 +149,11 @@
     </Content>
     <Content Include="projects\templates\projects\index.html" />
     <Content Include="requirements.txt" />
-    <Content Include="inventory\static\app\content\bootstrap.css" />
-    <Content Include="inventory\static\app\content\bootstrap.min.css" />
-    <Content Include="inventory\static\app\content\site.css" />
-    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="inventory\static\app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="app\static\app\content\site.css" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="inventory\templates\inventory\index.html" />
   </ItemGroup>
   <ItemGroup>

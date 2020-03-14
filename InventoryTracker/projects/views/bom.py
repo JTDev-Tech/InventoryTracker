@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.http import Http404
 
-from app.models import ProjectPartModel
+from projects.models import ProjectPartModel
 
 class ProjectBOMView(TemplateView):
     """

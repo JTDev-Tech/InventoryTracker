@@ -9,7 +9,7 @@ def home(request):
     all = PartModel.objects.all().order_by('Category')
     return render(
         request,
-        'app/index.html',
+        'inventory/index.html',
         {
             'parts': all,
             'title':'Home Page',

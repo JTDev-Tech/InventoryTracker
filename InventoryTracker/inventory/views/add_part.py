@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse
 from django.db import transaction
 from django.db.models import Q
 from django.db.models.functions import Length
-from django.urls import resolve
+from django.urls import reverse
 from django.views.generic.base import TemplateView
 import django.db.utils
 
@@ -18,7 +18,7 @@ class AddPartBaseView(TemplateView):
     """
     Base view class for adding a part
     """
-    template_name = "app/add_part.html"
+    template_name = "inventory/add_part.html"
 
     def __init__(self, **kwargs):
         self._Form = None
@@ -30,7 +30,7 @@ class AddPartBaseView(TemplateView):
         return PartAddSelectForm()
 
     def GetURL(self):
-        return '/add_part'
+        return reverse('inventory:add_part')
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -44,6 +44,7 @@ class AddPartBaseView(TemplateView):
         context['PartForm'] = self.GetPartTypeForm()
         context['ErrorText'] = self.ErrorText
         context['SuccessText'] = self.SuccessText
+        context['BaseURL'] = reverse('inventory:add_part')
         return context
 
 def _GetCategory(name:str) -> PartCategoryModel:

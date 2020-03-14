@@ -1,6 +1,6 @@
 from django.views.generic.base import TemplateView
 
-from app.models import ProjectModel
+from projects.models import ProjectModel
 
 class ProjectIndexView(TemplateView):
     """

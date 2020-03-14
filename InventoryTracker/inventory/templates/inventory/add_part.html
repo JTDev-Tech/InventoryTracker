@@ -49,16 +49,16 @@
 <script type="text/javascript">
 
 	$(document).ready(function () {
-        var BaseURL = "/add_part/";
+        var BaseURL = '{{BaseURL}}';
 		$("#id_Part").change(function (data) {
             console.log(data);
 
             switch (data.target.value) {
                 case "r":
-                    window.location = BaseURL + 'r';
+                    window.location = BaseURL + '/r';
                     break;
                 case "c":
-                    window.location = BaseURL + 'c';
+                    window.location = BaseURL + '/c';
                     break;
                 default:
                     console.log("Unknown part code");

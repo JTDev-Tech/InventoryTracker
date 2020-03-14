@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls import include, url
 from inventory import forms, views
 
-
+app_name = 'inventory'
 urlpatterns = [
     path('', views.home, name='home'),
     path('add_part', views.AddPartBaseView.as_view(), name='add_part'),
