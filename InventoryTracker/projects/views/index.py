@@ -6,7 +6,7 @@ class ProjectIndexView(TemplateView):
     """
     Project index  templated view
     """
-    template_name = "app/project_index.html"
+    template_name = "projects/project_index.html"
 
     def get(self, request, *args, **kwargs):
         self._Projects = ProjectModel.objects.all().order_by('Name')

@@ -16,6 +16,9 @@ class PackageModel(models.Model):
 
     Reference = models.URLField(help_text="Link to reference documentation for this parts package")
 
+    class Meta:
+        verbose_name = 'Footprint'
+
     def __str__(self):
         return self.Name
 
@@ -30,6 +33,7 @@ class PartCategoryModel(models.Model):
                                help_text="Parent category, if any")
 
     class Meta:
+        verbose_name = 'Part Category'
         unique_together = [['CategoryName', 'Parent']]
 
     def __str__(self):
@@ -43,6 +47,9 @@ class ShelfModel(models.Model):
 
     LocationID = models.CharField(max_length=32, unique=True,
                                   help_text="User assigned location ID for this shelf")
+
+    class Meta:
+        verbose_name = 'Shelf'
 
     def __str__(self):
         return self.Name
@@ -59,6 +66,7 @@ class ContainerModel(models.Model):
     Shelf =models.ForeignKey(ShelfModel, on_delete=models.CASCADE)
 
     class Meta:
+        verbose_name = 'Container'
         unique_together = [['LocationID', 'Shelf'], ['LocationID', 'Name']]
 
     def __str__(self):
@@ -75,6 +83,7 @@ class PartAttrModel(models.Model):
                              help_text="Value of this attribute")
 
     class Meta:
+        verbose_name = 'Part Attribute'
         unique_together = [['Name', 'Value']]
 
     def __str__(self):
@@ -106,6 +115,9 @@ class PartModel(models.Model):
 
     Attributes = models.ManyToManyField(PartAttrModel, blank= True,
                             help_text="Part this attribute is assigned to")
+
+    class Meta:
+        verbose_name = 'Part'
 
     def GetValue(self):
         Res = self.Name
@@ -152,6 +164,7 @@ class PartCountModel(models.Model):
                              help_text="Part this count is for")
 
     class Meta:
+        verbose_name = 'Part Count'
         unique_together = [['Location', 'Part']]
 
     def __str__(self)->str:
