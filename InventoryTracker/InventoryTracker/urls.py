@@ -8,8 +8,8 @@ from django.contrib import admin
 from app.views import index
 
 urlpatterns = [
-    url(r'^$', index, name='index'),
-    url(r'^inv/', include('inventory.urls')),
-    url(r'^proj/', include('projects.urls')),
+    path('', index, name='index'),
+    path('inv/', include('inventory.urls')),
+    path('proj/', include('projects.urls')),
     path('admin/', admin.site.urls),
 ]
