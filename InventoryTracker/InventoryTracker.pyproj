@@ -78,6 +78,9 @@
     <Compile Include="inventory\views\index.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="projects\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="projects\urls.py">
       <SubType>Code</SubType>
     </Compile>

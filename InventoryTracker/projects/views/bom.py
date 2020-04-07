@@ -7,7 +7,7 @@ class ProjectBOMView(TemplateView):
     """
     Project index  templated view
     """
-    template_name = "app/project_bom.html"
+    template_name = "projects/bom.html"
 
     def get(self, request, *args, **kwargs):
         if not 'id' in kwargs:
