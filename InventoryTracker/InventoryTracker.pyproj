@@ -81,6 +81,9 @@
     <Compile Include="projects\urls.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="projects\views\add.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="projects\views\bom.py">
       <SubType>Code</SubType>
     </Compile>
@@ -141,13 +144,13 @@
     <Content Include="app\static\app\scripts\app_const.js" />
     <Content Include="inventory\templates\inventory\add_part.html" />
     <Content Include="app\templates\app\layout.html" />
-    <Content Include="projects\templates\projects\project_bom.html">
+    <Content Include="projects\templates\projects\add.html" />
+    <Content Include="projects\templates\projects\bom.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="projects\templates\projects\project_index.html">
+    <Content Include="projects\templates\projects\index.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="projects\templates\projects\index.html" />
     <Content Include="requirements.txt" />
     <Content Include="app\static\app\content\site.css" />
     <Content Include="app\static\app\fonts\glyphicons-halflings-regular.eot" />

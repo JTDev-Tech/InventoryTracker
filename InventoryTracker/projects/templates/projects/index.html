@@ -1,9 +1,41 @@
-<html>
-<head><title></title></head>
+{% extends "app/layout.html" %}
+{% load static %}
+{% block content %}
 
-<body>
+	<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+		<div class="btn-group mr-2" role="group" aria-label="First group">
+			<button type="button" class="btn btn-secondary"><a href="{% url 'projects:add' %}">Create Project</a></button>
+		</div>
+	</div>
 
-{{ content }}
+<table id="project_table" class="display">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+			<th>BOM</th>
+        </tr>
+    </thead>
+    <tbody>
+		{% for p in Projects %}
+		<tr>
+			<td>{{ p.Name }}</td>
+			<td>{{ p.Description }}</td>
+			<td><a href="{% url 'bom' id=p.pk %}">BOM</a></td>
+		</tr>
+		{% endfor %}
+    </tbody>
+</table>
 
-</body>
-</html>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" href="{% static 'app/scripts/app_const.js' %}"></script>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		var table = $('#project_table').DataTable({});
+	});
+
+</script>
+{% endblock %}
