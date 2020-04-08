@@ -1,4 +1,7 @@
 from django import forms
+from .models import ProjectModel
 
-class AddProjectForm(forms.Form):
-    pass
+class AddProjectForm(forms.ModelForm):
+    class Meta:
+        model = ProjectModel
+        fields = ['Name', 'Description']

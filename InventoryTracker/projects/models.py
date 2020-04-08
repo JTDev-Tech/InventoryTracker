@@ -39,7 +39,7 @@ class ProjectPartModel(models.Model):
 
     def GetDesignators(self):
         """
-        Get a list of designators seperated by comma
+        Get a list of designators separated by comma
         """
         d = self.bomdesignatormodel_set.all()
         return ','.join([str(x) for x in d])
