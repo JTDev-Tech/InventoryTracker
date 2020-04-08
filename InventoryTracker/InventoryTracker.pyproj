@@ -147,6 +147,7 @@
     <Content Include="app\static\app\scripts\app_const.js" />
     <Content Include="inventory\templates\inventory\add_part.html" />
     <Content Include="app\templates\app\layout.html" />
+    <Content Include="mypy.ini" />
     <Content Include="projects\templates\projects\add.html" />
     <Content Include="projects\templates\projects\bom.html">
       <SubType>Code</SubType>

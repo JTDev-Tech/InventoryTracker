@@ -15,11 +15,11 @@ class SimpleTest(TestCase):
 
     # Django requires an explicit setup() when running tests in PTVS
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls)->None:
         super(SimpleTest, cls).setUpClass()
         django.setup()
 
-    def test_basic_addition(self):
+    def test_basic_addition(self)->None:
         """
         Tests that 1 + 1 always equals 2.
         """
