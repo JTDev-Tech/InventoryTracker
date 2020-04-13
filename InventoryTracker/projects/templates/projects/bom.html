@@ -1,6 +1,21 @@
 {% extends "app/layout.html" %}
 {% load static %}
+{% load widget_tweaks %}
 {% block content %}
+
+<div class="row">
+<form action="{% url 'projects:csv_upload' ID %}" 
+      method="post" 
+      enctype="multipart/form-data" 
+      class="col-6 col-xl-3"
+      id="BOMUploadForm">
+    {% csrf_token %}
+    <div class="form-group">        
+		<small class="form-text text-muted">{{ upload_form.BOMFile.help_text|safe }}</small>
+		{% render_field upload_form.BOMFile class+="form-control-file" %}
+    </div>
+</form>
+</div>
 
 <table id="project_table" class="display">
     <thead>
@@ -31,11 +46,16 @@
 
 {% block scripts %}
 <script type="text/javascript" href="{% static 'app/scripts/app_const.js' %}"></script>
+
 <script type="text/javascript">
 
-	$(document).ready(function () {
-		var table = $('#project_table').DataTable({});
-	});
+    $(document).ready(function () {
+        var table = $('#project_table').DataTable({});
+
+        $("#BOMUploadForm input[type=file]").change(function () {
+            $("#BOMUploadForm").submit();
+        });
+    });
 
 </script>
 {% endblock %}

@@ -1,0 +1,71 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+<div>
+<table id="PartTable">
+    <thead>
+        <tr>
+            {% for header in headers %}
+            <th>
+            <select data-column="{{header}}" data-col-indx="{{ forloop.counter0 }}">
+                <option>Select</option>
+            </select>
+            </th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for header in headers %}
+            <th>{{header}}</th>
+            {% endfor %}
+            <th>Part Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            {% for cell in row %}
+            <td>{{cell}}</td>
+            {% endfor %}
+            <td><input id="tags"></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+
+    var ColumnTypes = new Map();
+    ColumnTypes.set("Designator", 'D');
+    ColumnTypes.set("Name", 'N');
+
+    $(document).ready(function () {
+        var table = $('#PartTable').DataTable({
+            responsive: true,
+            "autoWidth": false
+        });
+        
+        $( "#tags" ).autocomplete({
+    });
+
+        $("select[data-column]").each(function(indx) {
+            $(this).append(new Option("Ignore", "I", false, false));
+            $(this).change(function (d) {
+                var v = this.value;
+                var indx = $(this).data("col-indx");
+                if (v == 'I') {
+                    table.column( indx ).visible( false );
+                }
+
+                table.responsive.recalc();
+            });
+        });
+    });
+
+</script>
+{% endblock %}
