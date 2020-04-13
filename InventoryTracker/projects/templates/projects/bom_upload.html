@@ -45,21 +45,30 @@
     ColumnTypes.set("Name", 'N');
 
     $(document).ready(function () {
+        var AutoMenu = $("#tags").autocomplete({
+            source: '/inv/search',
+        });
+
+        AutoMenu.data("ui-autocomplete")._renderItem = function (ul, item) {
+            var T = 1;
+            return $("<li>")
+                .attr("data-value", item.value)
+                .append(item.label)
+                .appendTo(ul);
+        };
+
         var table = $('#PartTable').DataTable({
             responsive: true,
             "autoWidth": false
         });
-        
-        $( "#tags" ).autocomplete({
-    });
 
-        $("select[data-column]").each(function(indx) {
+        $("select[data-column]").each(function (indx) {
             $(this).append(new Option("Ignore", "I", false, false));
             $(this).change(function (d) {
                 var v = this.value;
                 var indx = $(this).data("col-indx");
                 if (v == 'I') {
-                    table.column( indx ).visible( false );
+                    table.column(indx).visible(false);
                 }
 
                 table.responsive.recalc();
