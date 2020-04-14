@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Sum, Q
 from .support import UnitManager
 from .support import CommonAttrNames
+from .support import PathAndRename
 
 class PackageModel(models.Model):
     """
@@ -105,10 +106,10 @@ class PartModel(models.Model):
     MfgPartNumber = models.CharField(max_length=128, blank=True,
                                      help_text='Manufactorers part number for this part')
 
-    DataSheet = models.FileField(upload_to='data_sheets/%m/', null=True, blank=True,
+    DataSheet = models.FileField(upload_to=PathAndRename('data_sheets/%m/'), null=True, blank=True,
                                  help_text="Datasheet for this part")
 
-    PreviewImage = models.ImageField(upload_to='preview_img/%m/', null=True, blank=True,
+    PreviewImage = models.ImageField(upload_to=PathAndRename('preview_img/%m/'), null=True, blank=True,
                                      help_text="Preview image for this part")
 
     Package = models.ForeignKey(PackageModel, on_delete=models.CASCADE, null=True, blank=True,

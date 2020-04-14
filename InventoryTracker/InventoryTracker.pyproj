@@ -54,6 +54,9 @@
     <Compile Include="inventory\support\common_attr_names.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="inventory\support\file_name_wrapper.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="inventory\support\units.py">
       <SubType>Code</SubType>
     </Compile>

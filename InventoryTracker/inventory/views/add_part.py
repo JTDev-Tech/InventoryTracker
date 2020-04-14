@@ -98,6 +98,9 @@ class AddResistorView(AddPartBaseView):
                     if 'Datasheet' in self._Form.cleaned_data:
                         PM.DataSheet = self._Form.cleaned_data['Datasheet']
 
+                    if 'PreviewImage' in self._Form.cleaned_data:
+                        PM.PreviewImage = self._Form.cleaned_data['PreviewImage']
+
                     PM.save()
                     PM.Attributes.add(Tol)
                     PM.Attributes.add(ValueUnit)
@@ -148,6 +151,9 @@ class AddCapacitorView(AddPartBaseView):
 
                     if 'Datasheet' in self._Form.cleaned_data:
                         PM.DataSheet = self._Form.cleaned_data['Datasheet']
+
+                    if 'PreviewImage' in self._Form.cleaned_data:
+                        PM.PreviewImage = self._Form.cleaned_data['PreviewImage']
 
                     PM.save()
                     PM.Attributes.add(Tol)

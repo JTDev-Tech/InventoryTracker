@@ -50,6 +50,8 @@ class AddPartBase(FormBase):
 
     Datasheet = forms.FileField(allow_empty_file=False, required=False)
 
+    PreviewImage = forms.ImageField(allow_empty_file=False, required=False)
+
     Package_ID = forms.ModelChoiceField(label='Package', queryset=PackageModel.objects.all())
 
     Container_ID = forms.ModelChoiceField(label='Container', queryset=ContainerModel.objects.all());
