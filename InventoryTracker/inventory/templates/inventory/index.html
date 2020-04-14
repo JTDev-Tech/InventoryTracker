@@ -4,7 +4,7 @@
 <table id="part_table" class="display">
     <thead>
         <tr>
-			<th></th>
+			<th>Image</th>
             <th>Value</th>
             <th>Package</th>
             <th>Category</th>
@@ -13,7 +13,11 @@
     <tbody>
 		{% for part in parts %}
 		<tr>
-			<td></td>
+			<td>
+				{% if part.PreviewImage %}
+				<img height="64" width="64" src="{{part.PreviewImage.url}}"/>
+				{% endif %}
+			</td>
 			<td>{{part.GetValue}}</td>
 			<td>{{ part.Package.Name }}</td>
 			<td>{{ part.Category.CategoryName }}</td>
@@ -29,7 +33,9 @@
 <script type="text/javascript">
 
 	$(document).ready(function () {
-		var table = $('#part_table').DataTable({});
+		var table = $('#part_table').DataTable({})
+			.columns.adjust()
+			.responsive.recalc();
 	});
 
 </script>
