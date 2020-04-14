@@ -108,6 +108,9 @@ class PartModel(models.Model):
     DataSheet = models.FileField(upload_to='data_sheets/%m/', null=True, blank=True,
                                  help_text="Datasheet for this part")
 
+    PreviewImage = models.ImageField(upload_to='preview_img/%m/', null=True, blank=True,
+                                     help_text="Preview image for this part")
+
     Package = models.ForeignKey(PackageModel, on_delete=models.CASCADE, null=True, blank=True,
                                 help_text="Package of this part")
 
